@@ -3,8 +3,6 @@ import BaseButton from './BaseButton.vue'
 import { validateSelectOptions } from '../validators'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
-// defineProps(['selected', 'options', 'placeholder'])
-
 defineProps({
   selected: Number,
   placeholder: {
@@ -17,12 +15,23 @@ defineProps({
     validator: validateSelectOptions
   }
 })
+
+const emit = defineEmits({
+  select(value) {
+    return typeof value === 'number'
+  }
+})
 </script>
 
 <template>
   <div class="flex gap-2">
-    <BaseButton><XMarkIcon class="h-8" /></BaseButton>
-    <select class="rouded w-full truncate bg-gray-100 px-2 py-1 text-2xl">
+    <BaseButton @click="emit('select', null)">
+      <XMarkIcon class="h-8" />
+    </BaseButton>
+    <select
+      class="rouded w-full truncate bg-gray-100 px-2 py-1 text-2xl"
+      @change="emit('select', +$event.target.value)"
+    >
       <option selected disabled value="">{{ placeholder }}</option>
       <option
         v-for="{ value, label } in options"
